@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITHUB_ORG: ${{ secrets.GITHUB_ORG }}
+      GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+      GITHUB_ORG: ${{ secrets.ORG_GITHUB }}
 
     steps:
       - name: Checkout repository
