@@ -1,4 +1,4 @@
-name: Codacy Fina Report Generation
+name: Codacy Final Report Generation
 
 on:
   workflow_dispatch:
