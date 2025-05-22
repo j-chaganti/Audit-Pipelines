@@ -100,11 +100,10 @@ def check_codacy_badge(owner, repo):
 def export_to_csv(rows):
     """
     Export the provided rows to a CSV file with standard headers,
-    saving into the ../reports/ directory relative to this script.
+    saving into the reports/ directory at the repo root.
     """
-    # Get the script directory and construct the reports path
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    reports_dir = os.path.join(script_dir, '..', 'reports')
+    # Save CSV to reports/ directory at repo root
+    reports_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'reports')
     os.makedirs(reports_dir, exist_ok=True)  # Ensure reports directory exists
     filename = os.path.join(reports_dir, "soc_compliant_repos.csv")
     with open(filename, mode="w", newline="", encoding="utf-8") as f:
