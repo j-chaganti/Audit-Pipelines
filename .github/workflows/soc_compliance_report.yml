@@ -28,7 +28,7 @@ jobs:
           pip install requests
 
       - name: Run SOC compliance script
-        run: python path/to/your_script.py
+        run: python scripts/generate_csv.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ORG: ${{ secrets.GITHUB_ORG }}
