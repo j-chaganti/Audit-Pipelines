@@ -7,18 +7,18 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # Configuration Section 
 
 # Retrieve the GitHub token from environment variable
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+GITHUB_TOKEN = os.getenv("TOKEN_GITHUB")
 if not GITHUB_TOKEN:
-    raise Exception("🚨 Missing required environment variable: GITHUB_TOKEN")
+    raise Exception("🚨 Missing required environment variable: TOKEN_GITHUB")
 
 # Retrieve the GitHub organization from environment variable
-GITHUB_ORG = os.getenv("GITHUB_ORG")
+GITHUB_ORG = os.getenv("ORG_GITHUB")
 if not GITHUB_ORG:
-    raise Exception("🚨 Missing required environment variable: GITHUB_ORG")
+    raise Exception("🚨 Missing required environment variable: ORG_GITHUB")
 
 # Set up the HTTP headers for GitHub API requests
 GITHUB_HEADERS = {
-    "Authorization": f"Bearer {GITHUB_TOKEN}",
+    "Authorization": f"Bearer {TOKEN_GITHUB}",
     "Accept": "application/vnd.github+json"
 }
 
