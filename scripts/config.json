@@ -1,3 +1,5 @@
 {
-    "coverage_benchmark": 80.0
+    "coverage_benchmark": 80.0,
+    "issue_benchmark": 90.0
 }
+
