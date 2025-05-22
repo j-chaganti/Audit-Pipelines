@@ -1,0 +1,40 @@
+name: SOC Compliance Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
+
+jobs:
+  soc-compliance:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_ORG: ${{ secrets.GITHUB_ORG }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run SOC compliance script
+        run: python path/to/your_script.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ORG: ${{ secrets.GITHUB_ORG }}
+
+      - name: Upload SOC compliance report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: soc_compliant_repos
+          path: reports/soc_compliant_repos.csv
