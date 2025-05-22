@@ -103,7 +103,8 @@ def export_to_csv(rows):
     saving into the reports/ directory at the repo root.
     """
     # Save CSV to reports/ directory at repo root
-    reports_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'reports')
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    reports_dir = os.path.join(script_dir, '..', 'reports')
     os.makedirs(reports_dir, exist_ok=True)  # Ensure reports directory exists
     filename = os.path.join(reports_dir, "soc_compliant_repos.csv")
     with open(filename, mode="w", newline="", encoding="utf-8") as f:
