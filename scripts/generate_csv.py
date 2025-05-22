@@ -18,7 +18,7 @@ if not GITHUB_ORG:
 
 # Set up the HTTP headers for GitHub API requests
 GITHUB_HEADERS = {
-    "Authorization": f"Bearer {TOKEN_GITHUB}",
+    "Authorization": f"Bearer {GITHUB_TOKEN}",
     "Accept": "application/vnd.github+json"
 }
 
