@@ -2,41 +2,38 @@ import csv
 import json
 import matplotlib.pyplot as plt
 from collections import Counter
-import os
+import pandas as pd
+from openpyxl import load_workbook
+from openpyxl.drawing.image import Image as XLImage
 
-# Directory where this script lives
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+# ----- CONFIGURATION -----
+CONFIG_FILE = "config.json"
+CSV_FILE = "codacy_final.csv"
+EXCEL_FILE = "codacy_report.xlsx"
+PNG_GRADE_PIE = "codacy_grade_piechart.png"
+PNG_COVERAGE_BAR = "codacy_coverage_barchart.png"
+PNG_BENCHMARK_PIE = "codacy_coverage_benchmark_piechart.png"
 
-# Paths
-CONFIG_PATH = os.path.join(SCRIPT_DIR, "config.json")
-REPORTS_DIR = os.path.join(SCRIPT_DIR, "..", "reports")
-CSV_PATH = os.path.join(REPORTS_DIR, "codacy_final.csv")
-GRADE_PIE_PATH = os.path.join(REPORTS_DIR, "codacy_grade_piechart.png")
-COVERAGE_BAR_PATH = os.path.join(REPORTS_DIR, "codacy_coverage_barchart.png")
-BENCHMARK_PIE_PATH = os.path.join(REPORTS_DIR, "codacy_coverage_benchmark_piechart.png")
-
-# Ensure the reports directory exists
-os.makedirs(REPORTS_DIR, exist_ok=True)
-
-# Read benchmark from config
-with open(CONFIG_PATH) as f:
+# ----- READ CONFIG -----
+with open(CONFIG_FILE) as f:
     config = json.load(f)
 COVERAGE_BENCHMARK = config.get("coverage_benchmark", 80.0)
 
+# ----- PROCESS CSV AND GENERATE CHARTS -----
 grades = []
 coverages = []
 repo_names = []
 
-with open(CSV_PATH, newline="", encoding="utf-8") as f:
+with open(CSV_FILE, newline="", encoding="utf-8") as f:
     reader = csv.DictReader(f)
     for row in reader:
-        grades.append(row.get("grade") or "Unknown")
+        grades.append(row["grade"] or "Unknown")
         try:
-            coverage = float(row.get("coverage percentage", 0.0))
+            coverage = float(row["coverage percentage"])
         except (ValueError, KeyError):
             coverage = 0.0
         coverages.append(coverage)
-        repo_names.append(row.get("name", ""))
+        repo_names.append(row["name"])
 
 # Pie chart for repository grades
 grade_counts = Counter(grades)
@@ -45,11 +42,11 @@ plt.pie(grade_counts.values(), labels=grade_counts.keys(), autopct='%1.1f%%', st
 plt.title('Repository Grade Distribution')
 plt.axis('equal')
 plt.tight_layout()
-plt.savefig(GRADE_PIE_PATH)
-plt.show()
+plt.savefig(PNG_GRADE_PIE)
+plt.close()
 
 # Bar chart for repository coverage
-plt.figure(figsize=(max(10, len(repo_names)*0.5),6))
+plt.figure(figsize=(10,6))
 plt.bar(repo_names, coverages, color=['green' if c >= COVERAGE_BENCHMARK else 'red' for c in coverages])
 plt.axhline(COVERAGE_BENCHMARK, color='orange', linestyle='dashed', linewidth=2, label=f'Benchmark: {COVERAGE_BENCHMARK}%')
 plt.xlabel('Repository')
@@ -58,8 +55,8 @@ plt.title('Coverage Percentage by Repository')
 plt.xticks(rotation=45, ha='right')
 plt.legend()
 plt.tight_layout()
-plt.savefig(COVERAGE_BAR_PATH)
-plt.show()
+plt.savefig(PNG_COVERAGE_BAR)
+plt.close()
 
 # Analytics: How many are above/below benchmark
 above = sum(1 for c in coverages if c >= COVERAGE_BENCHMARK)
@@ -76,5 +73,21 @@ plt.pie([above, below], labels=['Above/Eq Benchmark', 'Below Benchmark'], autopc
 plt.title(f'Repositories Coverage vs {COVERAGE_BENCHMARK}% Benchmark')
 plt.axis('equal')
 plt.tight_layout()
-plt.savefig(BENCHMARK_PIE_PATH)
-plt.show()
+plt.savefig(PNG_BENCHMARK_PIE)
+plt.close()
+
+# ----- EXPORT TO EXCEL AND EMBED IMAGES -----
+df = pd.read_csv(CSV_FILE)
+df.to_excel(EXCEL_FILE, index=False)
+
+wb = load_workbook(EXCEL_FILE)
+ws = wb.active
+
+img_start_row = len(df) + 3  # Leave a couple of empty rows after table
+
+ws.add_image(XLImage(PNG_GRADE_PIE), f"B{img_start_row}")
+ws.add_image(XLImage(PNG_COVERAGE_BAR), f"B{img_start_row + 20}")
+ws.add_image(XLImage(PNG_BENCHMARK_PIE), f"B{img_start_row + 40}")
+
+wb.save(EXCEL_FILE)
+print(f"Excel report generated: {EXCEL_FILE} with charts embedded.")
