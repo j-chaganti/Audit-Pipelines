@@ -34,4 +34,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: soc_compliant_repos
-          path: reports/soc_compliant_repos.csv
+          path: reports/soc_compliant_repos2.csv
