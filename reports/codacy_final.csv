@@ -1,0 +1,16 @@
+S no.,name,repo link,compliance,codacy integrated,grade,coverage percentage
+1,ccloud-ui,https://github.com/octanner/ccloud-ui,GitHub Actions,Yes,A,80.00
+2,external-recognition-ui,https://github.com/octanner/external-recognition-ui,GitHub Actions,Yes,A,75.00
+3,external-recognition-svc,https://github.com/octanner/external-recognition-svc,GitHub Actions,Yes,A,32.00
+4,core-financial-svc,https://github.com/octanner/core-financial-svc,GitHub Actions,Yes,A,96.00
+5,ext-recog-approvals-ui,https://github.com/octanner/ext-recog-approvals-ui,GitHub Actions,Yes,A,85.00
+6,ucat-12c-job-svc,https://github.com/octanner/ucat-12c-job-svc,GitHub Actions,Yes,A,56.00
+7,language-service,https://github.com/octanner/language-service,GitHub Actions,Yes,A,80.00
+8,core-customer-config,https://github.com/octanner/core-customer-config,GitHub Actions,Yes,A,97.00
+9,perfapi,https://github.com/octanner/perfapi,GitHub Actions,Yes,B,0.53
+10,cc-customer-config-ui,https://github.com/octanner/cc-customer-config-ui,GitHub Actions,Yes,A,67.00
+11,costcode-management-service,https://github.com/octanner/costcode-management-service,GitHub Actions,Yes,A,64.00
+12,cc-admin-ext-recog-config-ui,https://github.com/octanner/cc-admin-ext-recog-config-ui,GitHub Actions,Yes,A,0.98
+13,initiatives-api,https://github.com/octanner/initiatives-api,GitHub Actions,Yes,A,2.50
+14,cc-initiatives-ui,https://github.com/octanner/cc-initiatives-ui,GitHub Actions,Yes,A,10.31
+15,victories-initiatives-api,https://github.com/octanner/victories-initiatives-api,GitHub Actions,Yes,A,0.50
