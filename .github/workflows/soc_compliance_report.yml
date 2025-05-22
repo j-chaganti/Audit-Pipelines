@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-      GITHUB_ORG: ${{ secrets.ORG_GITHUB }}
+      TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
+      ORG_GITHUB: ${{ secrets.ORG_GITHUB }}
 
     steps:
       - name: Checkout repository
@@ -29,9 +29,6 @@ jobs:
 
       - name: Run SOC compliance script
         run: python scripts/generate_csv.py
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_ORG: ${{ secrets.GITHUB_ORG }}
 
       - name: Upload SOC compliance report artifact
         uses: actions/upload-artifact@v4
