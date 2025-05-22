@@ -11,6 +11,11 @@ GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 if not GITHUB_TOKEN:
     raise Exception("🚨 Missing required environment variable: GITHUB_TOKEN")
 
+# Retrieve the GitHub organization from environment variable
+GITHUB_ORG = os.getenv("GITHUB_ORG")
+if not GITHUB_ORG:
+    raise Exception("🚨 Missing required environment variable: GITHUB_ORG")
+
 # Set up the HTTP headers for GitHub API requests
 GITHUB_HEADERS = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
@@ -119,10 +124,8 @@ def main():
     The main function orchestrates fetching, filtering, and exporting
     SOC-compliant repositories in a GitHub organization.
     """
-    # Prompt for organization name if not provided via environment
-    org = os.getenv("GITHUB_ORG")
-    if not org:
-        org = input("Enter your GitHub org name: ").strip()
+
+    org = GITHUB_ORG
 
     # Fetch all repositories in the organization
     github_repos = get_github_repos(org)
