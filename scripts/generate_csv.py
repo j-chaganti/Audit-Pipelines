@@ -106,7 +106,7 @@ def export_to_csv(rows):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     reports_dir = os.path.join(script_dir, '..', 'reports')
     os.makedirs(reports_dir, exist_ok=True)  # Ensure reports directory exists
-    filename = os.path.join(reports_dir, "soc_compliant_repos.csv")
+    filename = os.path.join(reports_dir, "soc_compliant_repos2.csv")
     with open(filename, mode="w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow([
