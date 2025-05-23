@@ -14,9 +14,9 @@ GITHUB_ORG = os.getenv("ORG_GITHUB")
 if not GITHUB_ORG:
     raise Exception("🚨 Missing required environment variable: ORG_GITHUB")
 
-CODACY_TOKEN = os.getenv("TOKEN_CODACY")
+CODACY_TOKEN = os.getenv("CODACY_API_TOKEN")
 if not CODACY_TOKEN:
-    raise Exception("🚨 Missing required environment variable: TOKEN_CODACY")
+    raise Exception("🚨 Missing required environment variable: CODACY_API_TOKEN")
 
 GITHUB_HEADERS = {
     "Authorization": f"Bearer {GITHUB_TOKEN}",
