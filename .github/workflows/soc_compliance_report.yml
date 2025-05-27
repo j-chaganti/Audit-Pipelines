@@ -31,7 +31,7 @@ jobs:
           pip install requests
 
       - name: Run SOC compliance script
-        run: python scripts/generate_csv.py
+        run: python scripts/generate_csv2.py
 
       - name: Get latest generated CSV filename
         id: get-latest
