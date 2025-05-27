@@ -1,7 +1,7 @@
 import os
 import requests
 import csv
-import base64
+from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Configuration Section
@@ -70,10 +70,6 @@ def is_soc_compliant(custom_properties):
     return False
 
 def get_codacy_projects(org):
-    """
-    Fetch all Codacy projects for a given organization.
-    Returns a set of repository full names ("org/repo") that are integrated with Codacy.
-    """
     projects = set()
     page = 1
     while True:
@@ -90,13 +86,8 @@ def get_codacy_projects(org):
         if not projects_on_page:
             break
         for proj in projects_on_page:
-            repo_full_name = None
-            # Codacy API returns 'repositoryFullName' or 'name' depending on API version
-            if "repositoryFullName" in proj:
-                repo_full_name = proj["repositoryFullName"]
-            elif "name" in proj and "/" in proj["name"]:
-                repo_full_name = proj["name"]
-            if repo_full_name:
+            repo_full_name = proj.get("repositoryFullName") or proj.get("name")
+            if repo_full_name and "/" in repo_full_name:
                 projects.add(repo_full_name.lower())
         page += 1
     return projects
@@ -105,7 +96,11 @@ def export_to_csv(rows):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     reports_dir = os.path.join(script_dir, '..', 'reports')
     os.makedirs(reports_dir, exist_ok=True)
-    filename = os.path.join(reports_dir, "soc_compliant_repos2.csv")
+
+    # Add timestamp to filename
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename = os.path.join(reports_dir, f"soc_compliant_repos2_{timestamp}.csv")
+
     with open(filename, mode="w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow([
@@ -114,6 +109,7 @@ def export_to_csv(rows):
         ])
         for idx, row in enumerate(rows, 1):
             writer.writerow([idx] + row)
+
     print(f"✅ CSV saved: {filename}")
 
 # --------------------- Main Logic ----------------------------------
@@ -121,11 +117,9 @@ def export_to_csv(rows):
 def main():
     org = GITHUB_ORG
 
-    # Fetch Codacy projects for the org
     codacy_projects = get_codacy_projects(org)
     print(f"🔎 Codacy projects found: {len(codacy_projects)}")
 
-    # Fetch all repositories in the organization
     github_repos = get_github_repos(org)
     print(f"🔎 Total GitHub repos found: {len(github_repos)}")
 
