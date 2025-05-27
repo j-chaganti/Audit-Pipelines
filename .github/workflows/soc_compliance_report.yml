@@ -33,14 +33,21 @@ jobs:
       - name: Run SOC compliance script
         run: python scripts/generate_csv.py
 
-      - name: Commit and push all timestamped CSV reports
+      - name: Get latest generated CSV filename
+        id: get-latest
+        run: |
+          cd reports
+          latest_csv=$(ls -t soc_compliant_repos2_*.csv | head -n 1)
+          echo "latest_csv=$latest_csv" >> $GITHUB_OUTPUT
+
+      - name: Commit and push the report
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add reports/soc_compliant_repos2_*.csv
+          git add "reports/${{ steps.get-latest.outputs.latest_csv }}"
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Update SOC compliance reports [skip ci]"
+            git commit -m "Update SOC compliance report [skip ci]"
             git push
           fi
