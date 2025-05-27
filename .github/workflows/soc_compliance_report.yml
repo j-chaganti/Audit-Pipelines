@@ -3,7 +3,7 @@ name: SOC Compliance Report
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '0 3 * * *'  # Runs daily at 03:00 UTC
 
 permissions:
   contents: write
@@ -33,11 +33,18 @@ jobs:
       - name: Run SOC compliance script
         run: python scripts/generate_csv.py
 
-      - name: Commit and push CSV report
+      - name: Find latest generated CSV filename
+        id: find_csv
+        run: |
+          cd reports
+          latest_file=$(ls -t soc_compliant_repos2_*.csv | head -n 1)
+          echo "latest_file=$latest_file" >> $GITHUB_OUTPUT
+
+      - name: Commit and push latest CSV report
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add reports/soc_compliant_repos2.csv
+          git add "reports/${{ steps.find_csv.outputs.latest_file }}"
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
@@ -49,4 +56,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: soc_compliant_repos
-          path: reports/soc_compliant_repos2.csv
+          path: reports/${{ steps.find_csv.outputs.latest_file }}
