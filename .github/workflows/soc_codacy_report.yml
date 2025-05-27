@@ -7,7 +7,7 @@ jobs:
   generate-report:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # needed to push changes
+      contents: write  # Needed to commit changes
 
     steps:
       - name: Checkout repository
@@ -31,10 +31,24 @@ jobs:
         run: |
           python scripts/generate_csv2.py
 
-      - name: Commit and push report
+      - name: Commit and push Codacy report
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add reports/soc_compliant_repos2.csv
-          git commit -m "Update SOC compliant Codacy report [skip ci]" || echo "No changes to commit"
-          git push
+
+          latest_file=$(ls -t reports/codacy_soc_compliant_report_*.csv | head -n 1)
+
+          if [ -z "$latest_file" ]; then
+            echo "No Codacy report found to commit."
+            exit 0
+          fi
+
+          git add "$latest_file"
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update SOC compliant Codacy report [skip ci]" || echo "Nothing to commit"
+            git push
+          fi
+
