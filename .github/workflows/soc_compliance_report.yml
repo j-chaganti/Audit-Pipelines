@@ -34,26 +34,18 @@ jobs:
         run: python scripts/generate_csv.py
 
       - name: Find latest generated CSV filename
-        id: find_csv
         run: |
           cd reports
           latest_file=$(ls -t soc_compliant_repos2_*.csv | head -n 1)
-          echo "latest_file=$latest_file" >> $GITHUB_OUTPUT
+          echo "LATEST_CSV=$latest_file" >> $GITHUB_ENV
 
       - name: Commit and push latest CSV report
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add "reports/${{ steps.find_csv.outputs.latest_file }}"
+          git add "reports/$LATEST_CSV"
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
             git commit -m "Update SOC compliance report [skip ci]" || echo "Nothing to commit"
             git push
-          fi
-
-      - name: Upload SOC compliance report artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: soc_compliant_repos
-          path: reports/${{ steps.find_csv.outputs.latest_file }}
