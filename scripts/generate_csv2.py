@@ -99,7 +99,7 @@ def export_to_csv(rows):
 
     # Add timestamp to filename
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    filename = os.path.join(reports_dir, f"soc_compliant_repos2_{timestamp}.csv")
+    filename = os.path.join(reports_dir, f"soc_compliant_repository_{timestamp}.csv")
 
     with open(filename, mode="w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
